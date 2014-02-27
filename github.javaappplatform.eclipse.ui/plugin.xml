@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="github.javaappplatform.eclipse.ui.project.classpath.AppClasspathContainerPage"
+            id="github.javaappplatform.eclipse.project.classpath.AppClasspathContainer"
+            name="Java App Platform">
+      </classpathContainerPage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="github.javaappplatform.eclipse.ui.launch.internal.JAPLaunchDelegate"
+            delegateDescription="This launcher provides an easy way to configure and launch an application based on the Java Application Platform."
+            delegateName="Java Application Platform Launcher"
+            id="github.javaappplatform.eclipse.ui.launch.LaunchConfigurationType"
+            modes="run, debug, profile"
+            name="Java Application Platform">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="github.javaappplatform.eclipse.ui.launch.LaunchConfigurationType"
+            icon="icons/zahnrad.gif"
+            id="github.javaappplatform.eclipse.ui.launch.Image">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="github.javaappplatform.eclipse.ui.launch.LaunchConfigurationTabGroup"
+            description="Launch an JAP based Application"
+            id="github.javaappplatform.eclipse.ui.launch.LaunchConfigurationTabGroup"
+            type="github.javaappplatform.eclipse.ui.launch.LaunchConfigurationType">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            class="github.javaappplatform.eclipse.ui.project.builder.AddRemoveNatureContributionFactory"
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="github.javaappplatform.eclipse.project.builder.ui.commands.category"
+            name="Java App Platform">
+      </category>
+      <command
+            categoryId="github.javaappplatform.eclipse.project.builder.ui.commands.category"
+            defaultHandler="github.javaappplatform.eclipse.ui.project.builder.AddRemoveNatureHandler"
+            id="github.javaappplatform.eclipse.project.builder.AddNature"
+            name="Convert to Java App Plugin">
+      </command>
+      <command
+            categoryId="github.javaappplatform.eclipse.project.builder.ui.commands.category"
+            defaultHandler="github.javaappplatform.eclipse.ui.project.builder.AddRemoveNatureHandler"
+            id="github.javaappplatform.eclipse.project.builder.RemoveNature"
+            name="Remove Java App Plugin Conversion">
+      </command>
+   </extension>
+</plugin>
