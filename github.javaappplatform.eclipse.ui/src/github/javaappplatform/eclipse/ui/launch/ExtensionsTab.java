@@ -122,8 +122,8 @@ public class ExtensionsTab extends AbstractLaunchConfigurationTab
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
-		configuration.setAttribute(ILaunchAPI.ATTR_EXCLUDED_EXTENSIONS, Collections.EMPTY_SET);
-		configuration.setAttribute(ILaunchAPI.ATTR_EXCLUDED_PLUGINS, Collections.EMPTY_SET);
+		configuration.setAttribute(ILaunchAPI.ATTR_EXCLUDED_EXTENSIONS, Collections.<String>emptySet());
+		configuration.setAttribute(ILaunchAPI.ATTR_EXCLUDED_PLUGINS, Collections.<String>emptySet());
 	}
 
 	/**
