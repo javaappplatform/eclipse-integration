@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java App Platform Eclipse Project Integration
 Bundle-SymbolicName: github.javaappplatform.eclipse;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.2
 Bundle-Vendor: javaappplatform, github
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.jdt.core;bundle-version="3.7.1",
@@ -14,16 +14,28 @@ Require-Bundle: org.eclipse.jdt.core;bundle-version="3.7.1",
  org.eclipse.jdt.launching;bundle-version="3.7.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: github.javaappplatform.eclipse.Activator
-Eclipse-BundleShape: dir
-Export-Package: github.javaappplatform.commons.collection,
+Bundle-ClassPath: .,
+ lib/commonlib-v1.0.jar,
+ lib/trove-3.0.3.jar,
+ lib/jackson-core-2.2.0.jar
+Export-Package: com.fasterxml.jackson.core,
+ com.fasterxml.jackson.core.base,
+ com.fasterxml.jackson.core.format,
+ com.fasterxml.jackson.core.io,
+ com.fasterxml.jackson.core.json,
+ com.fasterxml.jackson.core.sym,
+ com.fasterxml.jackson.core.type,
+ com.fasterxml.jackson.core.util,
+ github.javaappplatform.commons.collection,
  github.javaappplatform.commons.events,
  github.javaappplatform.commons.io,
  github.javaappplatform.commons.json,
  github.javaappplatform.commons.log,
  github.javaappplatform.commons.util,
+ github.javaappplatform.eclipse,
  github.javaappplatform.eclipse.project.builder,
- github.javaappplatform.eclipse.project.classpath;x-friends:="github.javaappplatform.eclipse.ui",
- github.javaappplatform.eclipse.util;x-friends:="github.javaappplatform.eclipse.ui",
+ github.javaappplatform.eclipse.project.classpath,
+ github.javaappplatform.eclipse.util,
  gnu.trove,
  gnu.trove.decorator,
  gnu.trove.function,
@@ -47,8 +59,4 @@ Export-Package: github.javaappplatform.commons.collection,
  gnu.trove.stack,
  gnu.trove.stack.array,
  gnu.trove.strategy
-Bundle-ClassPath: src/,
- lib/commonlib-v1.0.jar,
- lib/trove-3.0.3.jar,
- lib/jackson-core-2.2.0.jar
 

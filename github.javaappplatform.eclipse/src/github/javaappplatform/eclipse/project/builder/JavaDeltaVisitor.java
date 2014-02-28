@@ -21,6 +21,7 @@ public class JavaDeltaVisitor implements IElementChangedListener
 	@Override
 	public void elementChanged(ElementChangedEvent event)
 	{
+		System.out.println("Element changed started");
 		JavaDeltaVisitor visitor = new JavaDeltaVisitor();
 		LinkedList<IJavaElementDelta> toVisit = new LinkedList<>();
 		toVisit.add(event.getDelta());
@@ -30,6 +31,7 @@ public class JavaDeltaVisitor implements IElementChangedListener
 			if (visitor.visit(delta))
 				toVisit.addAll(Arrays.asList(delta.getAffectedChildren()));
 		}
+		System.out.println("Element changed stopped");
 	}
 
 	private boolean visit(final IJavaElementDelta delta)

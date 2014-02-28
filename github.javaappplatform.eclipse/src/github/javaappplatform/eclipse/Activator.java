@@ -31,6 +31,7 @@ public class Activator implements BundleActivator
 	{
 		CONTEXT = context;
 		JavaCore.addElementChangedListener(INSTANCE, ElementChangedEvent.POST_CHANGE);
+		System.out.println("Activator started");
 	}
 
 	/**

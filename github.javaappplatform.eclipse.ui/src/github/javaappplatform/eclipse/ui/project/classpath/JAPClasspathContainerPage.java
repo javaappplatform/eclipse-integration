@@ -2,7 +2,7 @@ package github.javaappplatform.eclipse.ui.project.classpath;
 
 import github.javaappplatform.eclipse.project.builder.Nature;
 import github.javaappplatform.eclipse.project.classpath.JAPClasspathContainer;
-import github.javaappplatform.eclipse.ui.Activator;
+import github.javaappplatform.eclipse.ui.IPlugin;
 import github.javaappplatform.eclipse.ui.util.SWTFactory;
 import github.javaappplatform.eclipse.util.Tools;
 
@@ -233,7 +233,7 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 				}
 				catch (CoreException e)
 				{
-					updateStatus(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not retrieve project dependencies.", e));
+					updateStatus(new Status(IStatus.ERROR, IPlugin.PLUGIN_ID, "Could not retrieve project dependencies.", e));
 				}
 			}
 		}

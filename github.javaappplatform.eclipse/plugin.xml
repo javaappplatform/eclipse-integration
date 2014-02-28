@@ -9,17 +9,6 @@
       </classpathContainerInitializer>
    </extension>
    <extension
-         id="github.javaappplatform.eclipse.project.builder.JSONCheckBuilder"
-         name="Java App Platform Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="github.javaappplatform.eclipse.project.builder.JSONCheckBuilder">
-         </run>
-      </builder>
-   </extension>
-   <extension
          id="github.javaappplatform.eclipse.project.builder.Nature"
          name="Java App Platform Nature"
          point="org.eclipse.core.resources.natures">
@@ -28,9 +17,6 @@
                class="github.javaappplatform.eclipse.project.builder.Nature">
          </run>
       </runtime>
-      <builder
-            id="github.javaappplatform.eclipse.project.builder.JSONCheckBuilder">
-      </builder>
       <requires-nature
             id="org.eclipse.jdt.core.javanature">
       </requires-nature>

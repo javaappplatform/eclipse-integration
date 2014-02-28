@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry excluding="de/d3fact/SRE/launch/internal/ClasspathSearch.java|de/d3fact/SRE/launch/internal/SRERuntimeClasspathProvider.java|de/d3fact/SRE/launch/internal/|de/d3fact/SRE/launch/ui/|github/javaappplatform/eclipse/ui/launch/internal/Checks.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

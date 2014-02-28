@@ -1,6 +1,6 @@
 package github.javaappplatform.eclipse.ui.launch.internal;
 
-import github.javaappplatform.eclipse.ui.Activator;
+import github.javaappplatform.eclipse.ui.IPlugin;
 import github.javaappplatform.eclipse.util.Tools;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class JAPRuntimeClasspathEntryResolver implements IRuntimeClasspathEntryR
 		}
 		catch (IOException | URISyntaxException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not resolve classpath entry: " + entry, e));
+			throw new CoreException(new Status(IStatus.ERROR, IPlugin.PLUGIN_ID, "Could not resolve classpath entry: " + entry, e));
 		}
 	}
 
