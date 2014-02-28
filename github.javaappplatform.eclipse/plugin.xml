@@ -4,8 +4,8 @@
    <extension
          point="org.eclipse.jdt.core.classpathContainerInitializer">
       <classpathContainerInitializer
-            class="github.javaappplatform.eclipse.project.classpath.AppClasspathContainerInitializer"
-            id="github.javaappplatform.eclipse.project.classpath.AppClasspathContainer">
+            class="github.javaappplatform.eclipse.project.classpath.JAPClasspathContainerInitializer"
+            id="github.javaappplatform.eclipse.project.classpath.JAPClasspathContainer">
       </classpathContainerInitializer>
    </extension>
    <extension

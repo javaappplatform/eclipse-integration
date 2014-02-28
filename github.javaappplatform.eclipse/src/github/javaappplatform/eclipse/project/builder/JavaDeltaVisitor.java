@@ -37,7 +37,7 @@ public class JavaDeltaVisitor implements IElementChangedListener
 		IJavaElement elem = delta.getElement(); 
 		if (elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
 		{
-			JAPBuilder.scheduleNewBuild(elem.getJavaProject());
+			JAPBuilder.scheduleNewBuild(elem.getJavaProject().getProject());
 		}
 		else if (elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
 		{

@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.JavaCore;
  * Initializes the Classpath Container on load.
  * @author funsheep
  */
-public class AppClasspathContainerInitializer extends ClasspathContainerInitializer
+public class JAPClasspathContainerInitializer extends ClasspathContainerInitializer
 {
 	
 	/**
@@ -27,7 +27,7 @@ public class AppClasspathContainerInitializer extends ClasspathContainerInitiali
 	{
 		try
 		{
-			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { project }, new IClasspathContainer[] { new AppClasspathContainer(containerPath) }, null);
+			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { project }, new IClasspathContainer[] { new JAPClasspathContainer(containerPath) }, null);
 			if (!project.getProject().hasNature(Nature.NATURE_ID))
 			{
 				IProjectDescription description = project.getProject().getDescription();

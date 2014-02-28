@@ -2,13 +2,8 @@ package github.javaappplatform.eclipse.project.builder;
 
 import github.javaappplatform.commons.events.TalkerStub;
 import github.javaappplatform.commons.util.StringID;
-import github.javaappplatform.eclipse.Activator;
 import github.javaappplatform.eclipse.util.Tools;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,10 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -57,7 +49,7 @@ public class Nature extends TalkerStub implements IProjectNature
 
 	private final HashSet<IFile> extensions = new HashSet<>();
 	private IProject project;
-	private WriteJAPSettingsJob writeJob;
+//	private WriteJAPSettingsJob writeJob;
 
 	
 
@@ -135,48 +127,48 @@ public class Nature extends TalkerStub implements IProjectNature
 
 	synchronized void loadFromFile(IProgressMonitor monitor) throws CoreException
 	{
-		if (monitor == null)
-			monitor = new NullProgressMonitor();
-		try
-		{
-			this.extensions.clear();
-			IFile file = this.project.getFile(FILE_NAME);
-			if (file.exists())
-			{
-				monitor.beginTask("Load Application Plugin List.", IProgressMonitor.UNKNOWN);
-				InputStream stream = file.getContents(true);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, file.getCharset()));
-				String line = reader.readLine();
-				while (line != null)
-				{
-					this.extensions.add(this.toFile(line));
-					line = reader.readLine();
-				}
-				this.validateExtensions();
-				this.postEvent(EVENT_EXTENSIONS_RELOADED, (Object[]) this.extensions.toArray(new IFile[this.extensions.size()]));
-				monitor.done();
-			}
-			else
-			{
-				JAPBuilder.scheduleNewBuild(JavaCore.create(this.project));
-			}
-		}
-		catch (IOException e)
-		{
-			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not read .jap file content.", e));
-		}
+//		if (monitor == null)
+//			monitor = new NullProgressMonitor();
+//		try
+//		{
+//			this.extensions.clear();
+//			IFile file = this.project.getFile(FILE_NAME);
+//			if (file.exists())
+//			{
+//				monitor.beginTask("Load Application Plugin List.", IProgressMonitor.UNKNOWN);
+//				InputStream stream = file.getContents(true);
+//				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, file.getCharset()));
+//				String line = reader.readLine();
+//				while (line != null)
+//				{
+//					this.extensions.add(this.toFile(line));
+//					line = reader.readLine();
+//				}
+//				this.validateExtensions();
+//				this.postEvent(EVENT_EXTENSIONS_RELOADED, (Object[]) this.extensions.toArray(new IFile[this.extensions.size()]));
+//				monitor.done();
+//			}
+//			else
+//			{
+//				JAPBuilder.scheduleNewBuild(this.project);
+//			}
+//		}
+//		catch (IOException e)
+//		{
+//			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not read .jap file content.", e));
+//		}
 	}
 	
 	private void writeExtsToFile() throws CoreException
 	{
 //		this.validateExtensions();
-		StringBuilder sb = new StringBuilder();
-		for (String ext : this.extensionNames())
-		{
-			sb.append(ext);
-			sb.append('\n');
-		}
-		this.writeJob.schedule(sb.toString());
+//		StringBuilder sb = new StringBuilder();
+//		for (String ext : this.extensionNames())
+//		{
+//			sb.append(ext);
+//			sb.append('\n');
+//		}
+//		this.writeJob.schedule(sb.toString());
 	}
 
 	private void validateExtensions() throws CoreException
@@ -196,7 +188,7 @@ public class Nature extends TalkerStub implements IProjectNature
 
 	public boolean isValidExtension(IResource resource)
 	{
-		return resource.getType() == IResource.FILE && this.toExtension((IFile) resource) != null;
+		return resource != null && resource.getType() == IResource.FILE && this.toExtension((IFile) resource) != null;
 	}
 	
 	public String toExtension(IFile resource)
@@ -300,14 +292,14 @@ public class Nature extends TalkerStub implements IProjectNature
 	public void deconfigure() throws CoreException
 	{
 		//remove .jap file
-		try
-		{
-			this.project.getFile(FILE_NAME).delete(true, null);
-		}
-		catch (CoreException e)
-		{
-			//there is no need to report this
-		}
+//		try
+//		{
+//			this.project.getFile(FILE_NAME).delete(true, null);
+//		}
+//		catch (CoreException e)
+//		{
+//			//there is no need to report this
+//		}
 		
 		//deconfigure builder (if needed)
 		IProjectDescription description = getProject().getDescription();
@@ -342,16 +334,17 @@ public class Nature extends TalkerStub implements IProjectNature
 	public void setProject(IProject project)
 	{
 		this.project = project;
-		this.writeJob = new WriteJAPSettingsJob(this.project);
+		JAPBuilder.scheduleNewBuild(this.project);
+//		this.writeJob = new WriteJAPSettingsJob(this.project);
 		//load extensions (if available)
-		try
-		{
-			this.loadFromFile(null);
-		}
-		catch (CoreException e)
-		{
-			//ignore
-		}
+//		try
+//		{
+//			this.loadFromFile(null);
+//		}
+//		catch (CoreException e)
+//		{
+//			//ignore
+//		}
 	}
 
 }

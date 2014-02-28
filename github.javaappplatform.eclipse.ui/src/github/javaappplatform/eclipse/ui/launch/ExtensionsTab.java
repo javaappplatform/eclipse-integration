@@ -1,6 +1,7 @@
 package github.javaappplatform.eclipse.ui.launch;
 
 import github.javaappplatform.eclipse.ui.launch.internal.BundleIProjectComparator;
+import github.javaappplatform.eclipse.ui.launch.internal.PluginTools;
 import github.javaappplatform.eclipse.ui.util.SWTFactory;
 import github.javaappplatform.eclipse.util.Tools;
 
@@ -12,7 +13,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -134,7 +134,7 @@ public class ExtensionsTab extends AbstractLaunchConfigurationTab
 	{
 		this.extTree.removeAll();
 		this.pluginList.removeAll();
-		Set<String> excludedPlugins = getExcluded(configuration, ILaunchAPI.ATTR_EXCLUDED_PLUGINS);
+		Set<String> excludedPlugins = PluginTools.getExcludedPlugins(configuration);
 
 		ArrayList<Object> list = new ArrayList<Object>(Arrays.asList(Tools.searchForInstalledPlugins()));
 		list.addAll(Arrays.asList(Tools.searchForWorkspacePlugins()));
@@ -211,7 +211,7 @@ public class ExtensionsTab extends AbstractLaunchConfigurationTab
 	private void addPluginToTree(Object o, ILaunchConfiguration configuration)
 	{
 		TreeItem titem = this.createTreeItemFor(o, null);
-		Set<String> excludedExts = configuration != null ? getExcluded(configuration, ILaunchAPI.ATTR_EXCLUDED_EXTENSIONS) : Collections.<String>emptySet();
+		Set<String> excludedExts = PluginTools.getExcludedExtensions(configuration);
 
 		TreeSet<String> sortedexts = new TreeSet<>(Tools.extensionsFor(o));
 		for (String ext : sortedexts)
@@ -339,21 +339,6 @@ public class ExtensionsTab extends AbstractLaunchConfigurationTab
 		{
 			checkItems(items[i], checked);
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static final Set<String> getExcluded(ILaunchConfiguration config, String attrID)
-	{
-		Set<String> excluded = Collections.<String>emptySet();
-		try
-		{
-			excluded = config.getAttribute(attrID, Collections.EMPTY_SET);
-		}
-		catch (CoreException e)
-		{
-			//ignore
-		}
-		return excluded;
 	}
 
 }

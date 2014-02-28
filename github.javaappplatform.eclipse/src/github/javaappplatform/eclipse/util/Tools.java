@@ -3,8 +3,10 @@ package github.javaappplatform.eclipse.util;
 import github.javaappplatform.eclipse.Activator;
 import github.javaappplatform.eclipse.project.builder.Nature;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,9 +18,15 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.URIUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -166,6 +174,15 @@ public class Tools
 		return paths.toArray(new URL[paths.size()]);
 	}
 	
+	
+	public static final IPath convertToPath(URL url) throws IOException, CoreException, URISyntaxException
+	{
+		final URI fromuri = URIUtil.toURI(FileLocator.resolve(url));
+		final IFileStore fromstore = EFS.getStore(fromuri);
+		final File file = fromstore.toLocalFile(0, null);
+		return Path.fromOSString(file.getCanonicalPath());
+	}
+
 
 	private Tools()
 	{

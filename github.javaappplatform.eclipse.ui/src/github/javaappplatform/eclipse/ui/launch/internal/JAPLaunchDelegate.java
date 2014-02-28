@@ -1,17 +1,13 @@
 package github.javaappplatform.eclipse.ui.launch.internal;
 
-import github.javaappplatform.eclipse.ui.launch.ExtensionsTab;
 import github.javaappplatform.eclipse.ui.launch.ILaunchAPI;
-import github.javaappplatform.eclipse.util.Tools;
 
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
-import org.osgi.framework.Bundle;
 
 /**
  * TODO javadoc
@@ -32,52 +28,20 @@ public class JAPLaunchDelegate extends JavaLaunchDelegate
 		putInternalAttribute(ILaunchAPI.ATTR_PA, configuration, sb);
 		
 		/******************** Add extensions parameter - should go somewhere else - *************/
-		Set<String> excludedPlugins = ExtensionsTab.getExcluded(configuration, ILaunchAPI.ATTR_EXCLUDED_PLUGINS);
-		Set<String> excludedExtensions = ExtensionsTab.getExcluded(configuration, ILaunchAPI.ATTR_EXCLUDED_EXTENSIONS);
+		Set<String> extensions = PluginTools.computeIncludedExtensions(configuration);
+		
 		boolean first = true;
-		for (Bundle bundle : Tools.searchForInstalledPlugins())
+		for (String ext : extensions)
 		{
-			if (excludedPlugins.contains(bundle.getSymbolicName()))
-				continue;
-			
-			for (String ext : Tools.bundleExtensions(bundle))
+			if (first)
 			{
-				if (excludedExtensions.contains(ext))
-					continue;
-				
-				if (first)
-				{
-					sb.append("-extensions ");
-					sb.append(' ');
-					first = false;
-				}
-				else
-					sb.append(':');
-				sb.append(ext);
+				sb.append("-extensions ");
+				first = false;
 			}
+			else
+				sb.append(':');
+			sb.append(ext);
 		}
-		for (IProject project : Tools.searchForWorkspacePlugins())
-		{
-			if (excludedPlugins.contains(project.getName()))
-				continue;
-			
-			for (String ext : Tools.projectExtensions(project))
-			{
-				if (excludedExtensions.contains(ext))
-					continue;
-				
-				if (first)
-				{
-					sb.append("-extensions ");
-					sb.append(' ');
-					first = false;
-				}
-				else
-					sb.append(':');
-				sb.append(ext);
-			}
-		}
-
 		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(sb.toString());
 	}
 	

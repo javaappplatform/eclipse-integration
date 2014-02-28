@@ -1,5 +1,6 @@
 package github.javaappplatform.eclipse.ui.launch;
 
+import github.javaappplatform.eclipse.ui.launch.internal.JAPRuntimeClasspathProvider;
 import github.javaappplatform.eclipse.ui.util.SWTFactory;
 
 import org.eclipse.core.runtime.CoreException;
@@ -116,8 +117,9 @@ public class ParameterTab extends AbstractLaunchConfigurationTab implements ILau
 	{
 		configuration.setAttribute(ILaunchAPI.ATTR_LOG_LEVEL, "WARNING");
 		configuration.setAttribute(ILaunchAPI.ATTR_PA, "");
-		configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "github.javaappplatform.Platform");
+		configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "github.javaappplatform.platform.Platform");
 		configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, true);
+		configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER, JAPRuntimeClasspathProvider.ID);
 	}
 
 	/**

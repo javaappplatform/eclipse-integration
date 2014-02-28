@@ -1,7 +1,7 @@
 package github.javaappplatform.eclipse.ui.project.classpath;
 
 import github.javaappplatform.eclipse.project.builder.Nature;
-import github.javaappplatform.eclipse.project.classpath.AppClasspathContainer;
+import github.javaappplatform.eclipse.project.classpath.JAPClasspathContainer;
 import github.javaappplatform.eclipse.ui.Activator;
 import github.javaappplatform.eclipse.ui.util.SWTFactory;
 import github.javaappplatform.eclipse.util.Tools;
@@ -39,7 +39,7 @@ import org.osgi.framework.Bundle;
  * TODO javadoc
  * @author funsheep
  */
-public class AppClasspathContainerPage extends NewElementWizardPage implements IClasspathContainerPage, IClasspathContainerPageExtension
+public class JAPClasspathContainerPage extends NewElementWizardPage implements IClasspathContainerPage, IClasspathContainerPageExtension
 {
 
 	private IClasspathEntry tempSelection;
@@ -48,7 +48,7 @@ public class AppClasspathContainerPage extends NewElementWizardPage implements I
 	private Table bundleList;
 
 	
-	public AppClasspathContainerPage()
+	public JAPClasspathContainerPage()
 	{
 		super("Java App Platform Library");
 		setTitle("Settings for the Java App Platform Library");
@@ -111,7 +111,7 @@ public class AppClasspathContainerPage extends NewElementWizardPage implements I
 				//ignore
 			}
 		}
-		return JavaCore.newContainerEntry(new Path(AppClasspathContainer.ID + sb.toString()));
+		return JavaCore.newContainerEntry(new Path(JAPClasspathContainer.ID + sb.toString()));
 	}
 	
 	/**

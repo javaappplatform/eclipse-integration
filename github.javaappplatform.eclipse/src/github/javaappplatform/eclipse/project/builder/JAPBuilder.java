@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -15,6 +16,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
 /**
@@ -24,9 +26,9 @@ import org.eclipse.jdt.core.JavaModelException;
 public class JAPBuilder
 {
 
-	public static final void scheduleNewBuild(final IJavaProject project)
+	public static final void scheduleNewBuild(final IProject project)
 	{
-		final Job job = new Job("Scan project "+project.getProject().getName()+" for .ext files.")
+		final Job job = new Job("Scan project "+project.getName()+" for .ext files.")
 		{
 			
 			@Override
@@ -34,10 +36,10 @@ public class JAPBuilder
 			{
 				try
 				{
-					Nature nat = (Nature) project.getProject().getNature(Nature.NATURE_ID);
-					if (nat != null)
+					if (project.hasNature(Nature.NATURE_ID))
 					{
-						Set<IFile> found = (new JAPBuilder()).visit(project);
+						Nature nat = (Nature) project.getNature(Nature.NATURE_ID);
+						Set<IFile> found = (new JAPBuilder()).visit(JavaCore.create(project));
 						nat.reset(found.toArray(new IFile[found.size()]));
 					}
 					return Status.OK_STATUS;
@@ -55,14 +57,11 @@ public class JAPBuilder
 	public Set<IFile> visit(IJavaProject project) throws JavaModelException
 	{
 		HashSet<IFile> found = new HashSet<>();
-		for (IPackageFragmentRoot root : project.getAllPackageFragmentRoots())
+		for (IPackageFragmentRoot root : project.getPackageFragmentRoots())
 		{
-			if (root.getKind() == IPackageFragmentRoot.K_SOURCE)
-			{
-				for (IJavaElement element : root.getChildren())
-					if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
-						this.handlePackageFragment((IPackageFragment) element, found);
-			}
+			for (IJavaElement element : root.getChildren())
+				if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
+					this.handlePackageFragment((IPackageFragment) element, found);
 		}
 		return found;
 	}
