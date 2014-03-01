@@ -40,12 +40,15 @@ public class Tools
 		try
 		{
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects())
-				if (project.hasNature(Nature.NATURE_ID))
+			{
+				if (project.isOpen() && project.hasNature(Nature.NATURE_ID))
 					search.add(project);
+			}
 		}
 		catch (CoreException e)
 		{
 			//ignore
+			e.printStackTrace();
 		}
 		return search.toArray(new IProject[search.size()]);
 	}
