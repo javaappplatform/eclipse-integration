@@ -2,14 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.jdt.ui.classpathContainerPage">
-      <classpathContainerPage
-            class="github.javaappplatform.eclipse.ui.project.classpath.JAPClasspathContainerPage"
-            id="github.javaappplatform.eclipse.project.classpath.JAPClasspathContainer"
-            name="Java App Platform">
-      </classpathContainerPage>
-   </extension>
-   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="github.javaappplatform.eclipse.ui.launch.internal.JAPLaunchDelegate"
@@ -77,5 +69,23 @@
             id="github.javaappplatform.eclipse.ui.launch.internal.JAPRuntimeClasspathEntryResolver"
             variable="JAP_LIB">
       </runtimeClasspathEntryResolver>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="github.javaappplatform.eclipse.ui.properties.JAPPropertyPage"
+            id="github.javaappplatform.eclipse.ui.properties.samplePropertyPage"
+            name="JAP Plugin Dependencies"
+            selectionFilter="single">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IResource">
+               <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="github.javaappplatform.eclipse.project.builder.Nature">
+               </test>
+            </adapt>
+         </enabledWhen>
+      </page>
    </extension>
 </plugin>

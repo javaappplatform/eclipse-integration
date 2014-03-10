@@ -1,8 +1,6 @@
-package github.javaappplatform.eclipse.ui.project.classpath;
+package github.javaappplatform.eclipse.ui.properties;
 
-import github.javaappplatform.eclipse.project.builder.Nature;
 import github.javaappplatform.eclipse.project.classpath.JAPClasspathContainer;
-import github.javaappplatform.eclipse.ui.IPlugin;
 import github.javaappplatform.eclipse.ui.util.SWTFactory;
 import github.javaappplatform.eclipse.util.Tools;
 
@@ -13,33 +11,27 @@ import java.util.LinkedList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
-import org.eclipse.jdt.ui.wizards.IClasspathContainerPageExtension;
-import org.eclipse.jdt.ui.wizards.NewElementWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.dialogs.PropertyPage;
 import org.osgi.framework.Bundle;
 
-/**
- * TODO javadoc
- * @author funsheep
- */
-public class JAPClasspathContainerPage extends NewElementWizardPage implements IClasspathContainerPage, IClasspathContainerPageExtension
+public class JAPPropertyPage extends PropertyPage
 {
 
 	private IClasspathEntry tempSelection;
@@ -47,98 +39,31 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 	private Table workspaceList;
 	private Table bundleList;
 
-	
-	public JAPClasspathContainerPage()
+
 	{
-		super("Java App Platform Library");
+		this.noDefaultAndApplyButton();
 		setTitle("Settings for the Java App Platform Library");
 		setImageDescriptor(JavaUI.getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_LIBRARY));
-		updateStatus(Status.OK_STATUS);
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean finish()
-	{
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IClasspathEntry getSelection()
-	{
-		StringBuilder sb = new StringBuilder(10);
-		if (this.bundleList != null && !this.bundleList.isDisposed())
-		{
-			for (TableItem item : this.bundleList.getItems())
-				if (item.getChecked())
-				{
-					sb.append('/');
-					sb.append(item.getData().toString());
-				}
-		}
-		if (this.workspaceList != null && !this.workspaceList.isDisposed())
-		{
-			try
-			{
-				HashSet<String> req = new HashSet<>(Arrays.asList(this.javaContext.getRequiredProjectNames()));
-				LinkedList<IClasspathEntry> currentEntries = new LinkedList<>(Arrays.asList(this.javaContext.getRawClasspath())); 
-				for (TableItem item : this.workspaceList.getItems())
-					if (item.getChecked() && !req.contains(item.getText()))	//create a new entry and add it to the current classpath
-					{
-						IClasspathEntry prjEntry = JavaCore.newProjectEntry(new Path("/"+item.getText()), false); // exported
-						currentEntries.add(prjEntry);
-					}
-					else if (!item.getChecked() && req.contains(item.getText()))	//remove corresponding entry from classpath
-					{
-						Iterator<IClasspathEntry> it = currentEntries.iterator();
-						while (it.hasNext())
-						{
-							IClasspathEntry entry = it.next();
-							if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT && entry.getPath().equals(new Path("/"+item.getText())))
-								it.remove();
-						}
-					}
-				this.javaContext.setRawClasspath(currentEntries.toArray(new IClasspathEntry[currentEntries.size()]), null);
-			}
-			catch (JavaModelException e)
-			{
-				//ignore
-			}
-		}
-		return JavaCore.newContainerEntry(new Path(JAPClasspathContainer.ID + sb.toString()));
-	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setSelection(IClasspathEntry containerEntry)
-	{
-		this.tempSelection = containerEntry;
-		this.updateSelectionBundles();
-	}
+    public void setElement(IAdaptable element)
+    {
+    	super.setElement(element);
+    	this.javaContext = (IJavaProject) element;
+    	this.tempSelection = this.javaContext.decodeClasspathEntry(JAPClasspathContainer.ID);
+    }
 
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialize(IJavaProject project, IClasspathEntry[] currentEntries)
-	{
-		this.javaContext = project;
-		this.updateSelectionWorkspace();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void createControl(Composite uberControl)
+	protected Control createContents(Composite uberControl)
 	{
 		Composite parent = SWTFactory.createComposite(uberControl, uberControl.getFont(), 2, 1, GridData.FILL_BOTH, 2, 10);
 
@@ -150,9 +75,7 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 		
 		Label description = new Label(g, SWT.WRAP);
 		description.setText("Please choose the plugins that should be available in the project.\n" +
-				"The plugins on the left side are custom projects located in the workspace. " +
-				"Please note, that changes made to the workspace project list are not immediately reflected by other property dialogs. " +
-				"The plugins on the right side are installed bundles located in this eclipse instance.");
+				"The plugins on the left side are custom projects located in the workspace.");
 		description.setLayoutData(data);
 
 		data = new GridData();
@@ -188,7 +111,84 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 		this.updateSelectionWorkspace();
 		
 		Dialog.applyDialogFont(parent);
-		setControl(parent);
+//		setControl(parent);
+		return parent;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean performOk()
+	{
+		if (this.workspaceList != null && !this.workspaceList.isDisposed())
+		{
+			try
+			{
+				HashSet<String> req = new HashSet<>(Arrays.asList(this.javaContext.getRequiredProjectNames()));
+				LinkedList<IClasspathEntry> currentEntries = new LinkedList<>(Arrays.asList(this.javaContext.getRawClasspath()));
+				for (TableItem item : this.workspaceList.getItems())
+				{
+					if (item.getChecked() && !req.contains(item.getText()))	//create a new entry and add it to the current classpath
+					{
+						IClasspathEntry prjEntry = JavaCore.newProjectEntry(new Path("/"+item.getText()), false); // exported
+						currentEntries.add(prjEntry);
+					}
+					else if (!item.getChecked() && req.contains(item.getText()))	//remove corresponding entry from classpath
+					{
+						Iterator<IClasspathEntry> it = currentEntries.iterator();
+						while (it.hasNext())
+						{
+							IClasspathEntry entry = it.next();
+							if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT && entry.getPath().equals(new Path("/"+item.getText())))
+								it.remove();
+						}
+					}
+					
+				}
+				this.javaContext.setRawClasspath(currentEntries.toArray(new IClasspathEntry[currentEntries.size()]), null);
+			}
+			catch (JavaModelException e)
+			{
+				e.printStackTrace();
+			}
+
+		}
+		
+		if (this.bundleList != null && !this.bundleList.isDisposed())
+		{
+			StringBuilder sb = new StringBuilder(10);
+			for (TableItem item : this.bundleList.getItems())
+				if (item.getChecked())
+				{
+					sb.append('/');
+					sb.append(item.getData().toString());
+				}
+			try
+			{
+				IClasspathEntry[] entries = this.javaContext.getRawClasspath();
+				int index = -1;
+				for (int i = 0; i < entries.length; i++)
+				{
+					if (entries[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER && entries[i].getPath().segment(0).equals(JAPClasspathContainer.ID))
+					{
+						index = i;
+						break;
+					}
+				}
+				IClasspathEntry[] newentries = new IClasspathEntry[entries.length+(index == -1 ? 1 : 0)];
+				System.arraycopy(entries, 0, newentries, 0, entries.length);
+				newentries[index == -1 ? entries.length : index] = JavaCore.newContainerEntry(new Path(JAPClasspathContainer.ID + sb.toString()));
+				this.javaContext.setRawClasspath(newentries, null);
+			}
+			catch (JavaModelException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private final void updateSelectionBundles()
@@ -222,18 +222,17 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 			{
 				try
 				{
-					if (!this.javaContext.getProject().hasNature(Nature.NATURE_ID))
-						throw new IllegalStateException("Project must have Java App Platform Nature.");
+//					if (!this.javaContext.getProject().hasNature(Nature.NATURE_ID))
+//						throw new IllegalStateException("Project must have Java App Platform Nature.");
 					HashSet<String> requirements = new HashSet<>(Arrays.asList(this.javaContext.getRequiredProjectNames()));
 					for (TableItem item : this.workspaceList.getItems())
 					{
-						
 						item.setChecked(requirements.contains(item.getText()));
 					}
 				}
 				catch (CoreException e)
 				{
-					updateStatus(new Status(IStatus.ERROR, IPlugin.PLUGIN_ID, "Could not retrieve project dependencies.", e));
+					e.printStackTrace();
 				}
 			}
 		}
@@ -244,6 +243,5 @@ public class JAPClasspathContainerPage extends NewElementWizardPage implements I
 		String name = b.getHeaders().get("Bundle-Name");
 		return (name != null ? name : b.getSymbolicName()) + " (" + b.getVersion() + ")";
 	}
-
 
 }

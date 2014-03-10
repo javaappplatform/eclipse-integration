@@ -23,7 +23,6 @@ Require-Bundle: org.eclipse.swt;bundle-version="3.7.1",
  github.javaappplatform.eclipse;bundle-version="1.0.1",
  org.eclipse.core.variables;bundle-version="3.2.700"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/BlankPreset.xml
 Bundle-ClassPath: src/,
  .
 Import-Package: github.javaappplatform.eclipse.project.builder,

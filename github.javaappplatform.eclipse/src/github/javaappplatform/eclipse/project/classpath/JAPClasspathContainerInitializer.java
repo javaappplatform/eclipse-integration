@@ -1,5 +1,6 @@
 package github.javaappplatform.eclipse.project.classpath;
 
+import github.javaappplatform.eclipse.Activator;
 import github.javaappplatform.eclipse.project.builder.Nature;
 
 import org.eclipse.core.resources.IProjectDescription;
@@ -23,11 +24,11 @@ public class JAPClasspathContainerInitializer extends ClasspathContainerInitiali
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialize(IPath containerPath, IJavaProject project) throws CoreException
+	public void initialize(final IPath containerPath, final IJavaProject project) throws CoreException
 	{
 		try
 		{
-			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { project }, new IClasspathContainer[] { new JAPClasspathContainer(containerPath) }, null);
+			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { JavaCore.create(project.getProject()) }, new IClasspathContainer[] { new JAPClasspathContainer(containerPath) }, null);
 			if (!project.getProject().hasNature(Nature.NATURE_ID))
 			{
 				IProjectDescription description = project.getProject().getDescription();
@@ -40,7 +41,7 @@ public class JAPClasspathContainerInitializer extends ClasspathContainerInitiali
 			}
 		} catch (Exception e1)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, "github.javaappplatform.eclipse.project.builder", "Could not resolve Application Platform classpath.", e1));
+			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not resolve Application Platform classpath.", e1));
 		}
 	}
 
